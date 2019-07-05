@@ -157,5 +157,5 @@ Please consider to:
 
 ## How to test and debug
 
-Please check the `tests/how-to-test.md' file for information in regards to testing the application
+Please check the `tests/how-to-test.md` file for information in regards to testing the application
 
