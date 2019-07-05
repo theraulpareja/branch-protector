@@ -9,6 +9,7 @@ import requests
 import yaml
 import pdb
 import json
+import time
 
 
 class ReadConfigYaml:
@@ -77,6 +78,7 @@ def update_branch_protection(token, owner, repo, branch):
         with open('../payloads/branch-protector-payload.json') as json_file:
             json_data = json.load(json_file)
             json_data_clean = json.dumps(json_data, indent=4, sort_keys=True)
+            time.sleep(8)
             api_call = requests.put(url, data=json_data_clean, headers=headers)
     except Exception as msg:
         message = '{{"message": "Could not run api call {}: {}"}}'.format(url, msg)
@@ -99,9 +101,9 @@ def update_branch_protection(token, owner, repo, branch):
 
 
 def enable_repo_issues(token, owner, repo):
-    # Enable isusues in a repository with Edit reposiotry API
-    # https://developer.github.com/v3/repos/#edit
-    #
+    """ Enable isusues in a repository with Edit reposiotry API
+    https://developer.github.com/v3/repos/#edit
+    """
     headers = {'Authorization': 'bearer {}'.format(token)}
     url = 'https://api.github.com/repos/{}/{}'.format(owner, repo)
     payload = '{{"name":"{}","has_issues":"true"}}'.format(repo)
@@ -167,9 +169,14 @@ def index():
 @app.route('/branch-protector', methods=['POST'])
 def branch_protector():
     if (request.is_json):
+        app.logger.debug('JSON post detected')
+    content = request.get_json()
+    if content is None:
+        app.logger.debug('Value of content is {}'.format(type(content)))
+        return json_not_found()
+    else:
         configs = get_config()
-        app.logger.info('JSON file received')
-        content = request.get_json()
+        app.logger.info('JSON payload loaded')
         if (content['action'] == 'created'):
             reponame = content['repository']['name']
             creation = content['repository']['created_at']
@@ -196,6 +203,3 @@ def branch_protector():
             return '{"mesage": "thank you for using branch-protector"}'
         else:
             return non_repo_creation_event()
-    else:
-        return json_not_found()
-

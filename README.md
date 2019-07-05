@@ -1,8 +1,6 @@
 # branch-protector
 
-**branch-protector** automates branch protection (usually master) for brand new repositories in your GitHub organization.
-**WARNING:** Please checkout the README.md file to read all its content as the GUI truncates it, you can get the raw content of this guide [here](https://raw.githubusercontent.com/theraulpareja/branch-protector/master/README.md) 
-
+**branch-protector** automates branch protection ( e.g master) for any brand new repositories in your GitHub organization and creates an issue with a mention to you with information of your branch protections.
 
 ## Configuration
 
@@ -18,7 +16,7 @@ FLASK_APP=app-branch-protector.py
 # Do not use development environment in production!, change FLASK_ENV to production
 FLASK_ENV=development
 # FLASK_ENV=prodution
-FLASK_RUN_PORT=9090
+FLASK_RUN_PORT=8080
 ```
 
 * **Create** the `branch-protector/conf/branch-protector-config.yaml` by copying/renaming branch-protector/conf/branch-protector-config.yaml_example as an source. creating-a-personal-access-token-for-the-command-line))
@@ -109,6 +107,7 @@ flask run  --host=0.0.0.0
 
 * Create a webhook in your GitHub organization, you will need an admin or owner permissions (use your organization to complete the url) https://github.com/organizations/<ORGANIZATION>/settings/hooks .
 * Click radio button `Let me select individual events.` and select **ONLY** `Repositories` check box.
+* **IMPORTANT:** Select Content type `application/json`
 * Select `Active` check box and push `Add Webhook`
 
 
@@ -134,16 +133,16 @@ docker build -f Docker/Dockerfile . -t theraulpareja/branch-protector:v0
 
 ```
 # To see live requests processing:
-docker run  -p 9090:9090 --rm --name branch-protector theraulpareja/branch-protector:v0
+docker run  -p 8080:8080 --rm --name branch-protector theraulpareja/branch-protector:v0
 
 # To run in detached mode (recommended)
-docker run -d -p 9090:9090 --rm --name branch-protector theraulpareja/branch-protector:v0
+docker run -d -p 8080:8080 --rm --name branch-protector theraulpareja/branch-protector:v0
 ```
 
 * To create a container with interactive shell for debugging
 
-````
-docker run -it -p 9090 --rm theraulpareja/branch-protector:v0 sh
+```
+docker run -it -p 8080 --rm theraulpareja/branch-protector:v0 sh
 # once in run flask
 flask run  --host=0.0.0.0
 ```
@@ -159,5 +158,4 @@ Please consider to:
 ## How to test and debug
 
 Please check the `tests/how-to-test.md' file for information in regards to testing the application
-
 
