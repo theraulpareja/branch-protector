@@ -1,7 +1,7 @@
-# Tests 
+# Tests branch-protector locally
 
 
-### Change FLASK_ENV  to development for debuging
+## Change FLASK_ENV  to development for debuging
 
 Is recomended to edit the edit the .flaskenv file and change the values of FLASK_ENV to development for better debuging, conider to change the port if needed too.
 
@@ -11,9 +11,20 @@ FLASK_ENV=prodution
 FLASK_RUN_PORT=9090
 ```
 
-### Simulate json payload posts from GitHub
+## Simulate json payload posts from GitHub
 
-To check only the flask appliciation, there are json files under the tests/ directory that you can use to mimic the json POST payload sent by  GitHub webhook setup.
+To test the flask appliciation you will need to:
+
+* Create a webhook in your GitHiub organization, you will need admin or owner permitions (use your organization to complete the url) https://github.com/organizations/<ORGANIZATION>/settings/hooks .
+* Click radio button `Let me select individual events.` and select **ONLY** `Repositories` check box.
+* Select `Acitve` check box an push `Add Webhook`
+* Create a brand new repository within your organization and initialize it with a README file
+
+If you don't have exposed DNS:PORT or IP:PORT to the public yet, you can go to your webhooks  https://github.com/organizations/YOUR-ORGA/settings/hooks click in `Edit` and scroll down to `Recent Deliveries` to select the Payload json request (click in `...`)
+
+* Save a json payload under `branch-protector/test/test-payload-creation.json` with the name test-payload-creation.json, make sure this payload was generated due to repository **creation**.
+* Save a json payload under `branch-protector/test/test-payload-deletion.json` with the name test-payload-deletion.json, make sure this payload was generated due to repository **deletion**.
+
 
 First open a terminal and run the flask application
 
@@ -23,7 +34,7 @@ flask run
 ```
 
 Open a second terminal and test branch-protector to simulate receiving the payload json post for GitHub due to a repository creation.
-We should receive http 200 application/json "XXXX"
+We should receive http 201 
 
 ```
 cd tests

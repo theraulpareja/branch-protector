@@ -1,10 +1,10 @@
 # branch-protector
 
-Automate master branch protection for brand new repositories in your GitHub organization.
+**branch-protector** automates branch protection (usually master) for brand new repositories in your GitHub organization.
 
 ## Configuration
 
-## Basic configuration
+## Basic webservice configuration
 
 There are 2 main config files:
 
@@ -19,8 +19,16 @@ FLASK_ENV=development
 FLASK_RUN_PORT=9090
 ```
 
-* Create the `branch-protector/conf/branch-protector-config.yaml` editing by copying/renameing branch-protector/conf/branch-protector-config.yaml_example as an example, mind that you will need a `Personal access tokens`, you can create yours in https://github.com/settings/tokens
+* **Create** the `branch-protector/conf/branch-protector-config.yaml` by copying/renameing branch-protector/conf/branch-protector-config.yaml_example as an source. creating-a-personal-access-token-for-the-command-line))
   
+```
+cd branch-protector/conf
+cp branch-protector-config.yaml_example branch-protector-config.yaml
+```
+
+* Edit created file `branch-protector/conf/branch-protector-config.yaml`,  the mind that you will need a `Personal access tokens` first, you can create yours in https://github.com/settings/tokens (more information about personal access tokens [here](https://help.github.com/en/articles/) ), please read carefully the comments, this is the https://developer.github.com/v3/repos/branches/#update-branch-protection API abstraction  in a yaml configuration file with all the the possible values. 
+
+
 ```
 APP_CONF:
   # The branch you want to protect
@@ -74,17 +82,17 @@ There are serveral ways to run branch-protector
 
 ### flask standalone 
 
-Clone the repo and create a python3 virtualenv to use branch-protector within
+* Clone the repo and create a python3 virtualenv to use branch-protector within
 
 ```
 git clone https://github.com/theraulpareja/branch-protector.git
-cd cd branch-protector
+cd branch-protector
 python3 -m venv env
 source  env/bin/activate
 pip install -r requirements.txt
 ```
 
-Check configuration section to setup `branch-protector/app-branch-protector/.flaskenv` and `branch-protector/conf/branch-protector-config.yaml` and make sure github.com can reach your `Payload URL`
+* Review section **Basic webservice configuration** to setup `branch-protector/app-branch-protector/.flaskenv` and `branch-protector/conf/branch-protector-config.yaml` and make sure github.com can reach your `Payload URL`
 
 Run the flask application on your server
 ```
@@ -92,7 +100,8 @@ cd app-branch-protector
 flask run
 ```
 
-Go to section "Setup webhook in your GitHub organization" to setup GitHub side
+* Go to section "Setup webhook in your GitHub organization" to setup GitHub webhook to call branch-protector URL.
+* Please check the docs in `tests/how-to-test.md` file for information in regards testing.
 
 ## Setup webhook in your GitHub organization 
 
@@ -101,7 +110,27 @@ Go to section "Setup webhook in your GitHub organization" to setup GitHub side
 * Select `Acitve` check box an push `Add Webhook`
 
 
-### Docker 
+### Docker
+
+* Clone the repo with `git clone https://github.com/theraulpareja/branch-protector.git'
+
+```
+git clone https://github.com/theraulpareja/branch-protector.git
+```
+
+* Edit config files `branch-protector/app-branch-protector/.flaskenv` and  `branch-protector/conf/branch-protector-config.yaml`  described in section **Basic webservice configuration**
+* Build the image 
+```
+cd branch-protector
+docker build -f Docker/Dockerfile . -t theraulpareja/branch-protector:v0
+```
+
+* Run a container **select port strategy** (ephemeral or mapped) 
+```
+docker run -it --rm theraulpareja/branch-protector:v0 sh
+docker run -d -p 9090 --rm theraulpareja/branch-protector:v0 sleep 3600
+docker run 
+```
 
 TODO
 
@@ -111,4 +140,4 @@ TODO
 
 ## How to test
 
-Please check the tests/how-to-test.md file for information in regards testing
+Please check the `tests/how-to-test.md' file for information in regards testing the application
