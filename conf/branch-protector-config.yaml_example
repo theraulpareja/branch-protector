@@ -1,11 +1,5 @@
 # Template config file for branch-protector
 
-# Flask app configuration to be kepts on .flaskenv 
-FLASK_CONF:
-  FLASK_APP: app-branch-protector.py
-  FLASK_ENV: development
-  FLASK_RUN_PORT: 9090
-
 APP_CONF:
   # The branch you want to protect
   BRANCH: master
