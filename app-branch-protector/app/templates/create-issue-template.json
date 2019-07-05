@@ -1,0 +1,6 @@
+{% filter indent(width=2) %}
+{
+    "title": " {{ configs.branchname }} branch protected ",
+    "body": {% block body %}{% endblock %}
+}
+  {% endfilter %}

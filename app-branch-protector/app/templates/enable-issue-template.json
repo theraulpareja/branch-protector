@@ -1,0 +1,6 @@
+{% filter indent(width=2) %}
+{
+    "name": "{{ reponame }}",
+    "has_issues": true
+}
+{% endfilter %}

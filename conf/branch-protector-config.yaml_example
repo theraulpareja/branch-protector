@@ -1,0 +1,44 @@
+# Template config file for branch-protector
+
+# Flask app configuration to be kepts on .flaskenv 
+FLASK_CONF:
+  FLASK_APP: app-branch-protector.py
+  FLASK_ENV: development
+  FLASK_RUN_PORT: 9090
+
+APP_CONF:
+  # The branch you want to protect
+  BRANCH: master
+  # Organization name (required)
+  ORGANIZATION: conejillo-de-indias
+  # Add personal access token of organization owner or admin (required)
+  TOKEN: 'your-token'
+  # Required. Require status checks to pass before merging. Set to null to disable.
+  REQUIRED_STATUS_CHECKS:
+  # Required if REQUIRED_STATUS_CHECKS is not left null. Require branches to be up to date before merging True or False.
+    - strict: True
+  # Required if REQUIRED_STATUS_CHECKS is not left null. The list of status checks to require in order to merge into this branch 
+      contexts:
+        - continuous-integration/travis-ci
+  # Required. Enforce all configured restrictions for administrators. Set to True to enforce required status checks for repository administrators. Set to null to disable.
+  ENFORCE_ADMINS: True
+  # Required. Require at least one approving review on a pull request, before merging. Set to null to disable.
+  REQUIRED_PULL_REQUEST_REVIEWS:
+  # Specify which users and teams can dismiss pull request reviews. Pass an empty dismissal_restrictions object to disable. User and team dismissal_restrictions are only available for organization-owned repositories. Omit this parameter for personal repositories.
+    - dismissal_restrictions:
+      users:
+        - chucknorris
+      teams:
+        - A-Team
+  # Set to true if you want to automatically dismiss approving reviews when someone pushes a new commit.
+    - dismiss_stale_reviews: True
+  # Blocks merging pull requests until code owners review them. 
+    - require_code_owner_reviews: True
+  # Specify the number of reviewers required to approve pull requests. Use a number between 1 and 6.
+    - required_approving_review_count: 1
+  # Required. Restrict who can push to this branch. Team and user restrictions are only available for organization-owned repositories. Set to null to disable.
+  RESTRICTIONS:
+    users:
+      - brucelee
+    teams:
+      - fcbarcelona
