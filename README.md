@@ -157,7 +157,7 @@ docker run -it -p 8080 --rm theraulpareja/branch-protector:v0 sh
 flask run  --host=0.0.0.0
 ```
 
-## Expose branch-protector 'Payload url`  to GitHub
+## Expose branch-protector 'Payload url' to GitHub
 
 Please consider to:
 
