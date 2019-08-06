@@ -1,14 +1,24 @@
 # branch-protector
 
-**branch-protector** automates branch protection ( e.g master) for any brand new repositories in your GitHub organization and creates an issue with a mention to you with information of your branch protections.
+**branch-protector** automates branch protection ( e.g master) for any brand new repositories under your GitHub organization and creates an issue with a mention to you (or any owner) with information of your branch protection rules set.
 
-## Configuration
+## Set up and configurations
 
-## Basic webservice configuration
+### Requirements
 
-There are 2 main config files:
+**IMPORTANT:**  You will need a `Personal access tokens` first, you can create yours in https://github.com/settings/tokens, more information about personal access tokens [here](https://help.github.com/en/articles/)
 
-* Edit the `branch-protector/app-branch-protector/.flaskenv` To control flask app ports and environments
+
+### Configuration files
+
+There are 2 main config files that need to be edited:
+
+* `branch-protector/app-branch-protector/.flaskenv`
+* `branch-protector/conf/branch-protector-config.yaml`
+
+### branch-protector/app-branch-protector/.flaskenv
+
+Edit the `branch-protector/app-branch-protector/.flaskenv` to set up the flask app port and environments (please mind to set FLASK_ENV to production once you are ready to go live).
 
 ```
 # Flask app vars
@@ -19,14 +29,15 @@ FLASK_ENV=development
 FLASK_RUN_PORT=8080
 ```
 
-* **Create** the `branch-protector/conf/branch-protector-config.yaml` by copying/renaming branch-protector/conf/branch-protector-config.yaml_example as an source. creating-a-personal-access-token-for-the-command-line))
+### branch-protector/conf/branch-protector-config.yaml
+
+* **Create** the `branch-protector/conf/branch-protector-config.yaml` by copying the example yaml template `branch-protector/conf/branch-protector-config.yaml_example`) 
  ```
 cd branch-protector/conf
 cp branch-protector-config.yaml_example branch-protector-config.yaml
 ```
 
-* Edit created file `branch-protector/conf/branch-protector-config.yaml`,  the mind that you will need a `Personal access tokens` first, you can create yours in https://github.com/settings/tokens (more information about personal access tokens [here](https://help.github.com/en/articles/) ), please read carefully the comments, this is the https://developer.github.com/v3/repos/branches/#update-branch-protection API abstraction  in a yaml configuration file with all the possible values.
-
+* Edit the recently created file `branch-protector/conf/branch-protector-config.yaml` with the right data for your organization and credentials. Please read carefully the comments, this is the https://developer.github.com/v3/repos/branches/#update-branch-protection API abstraction adapted to a yaml configuration file.
 
 ```
 APP_CONF:
@@ -71,14 +82,18 @@ APP_CONF:
 
 There are several ways to run branch-protector, some of them are:
 
-* flask standalone
+* flask standalone application
 * docker
 
 ### First set up the webhook in your GitHub organization
 
 **IMPORTANT: In all cases** you will need to:
-* Create a webhook in your GitHub organization, you will need an admin or owner permissions and go to https://github.com/organizations/<ORGANIZATION>/settings/hooks
-* You will need to **expose the flask app with a public IP and a exposed port** and configure properly the file branch-protector/app-branch-protector/.flaskenv to expose the `Payload URL`
+* Create a webhook in your GitHub organization, you will need an admin or owner permissions https://github.com/organizations/<ORGANIZATION>/settings/hooks
+* Click radio button `Let me select individual events.` and select **ONLY** `Repositories` check box.
+* **IMPORTANT:** Select Content type `application/json`
+* Select `Active` check box and push `Add Webhook`
+* You will need to **expose the flask app with a public IP and a exposed port** check config file branch-protector/app-branch-protector/.flaskenv to match the exposed port and IP or DNS for the `Payload URL`.
+
 
 ### branch-protector as a flask standalone app
 
@@ -94,21 +109,16 @@ pip install -r requirements.txt
 
 * Review section **Basic webservice configuration** to setup `branch-protector/app-branch-protector/.flaskenv` and `branch-protector/conf/branch-protector-config.yaml` and make sure github.com can reach your `Payload URL`
 
-Run the flask application on your server
+* Run the flask application on your server
 ```
 cd app-branch-protector
 flask run  --host=0.0.0.0
 ```
 
-* Go to section "Setup webhook in your GitHub organization" to setup GitHub webhook to call branch-protector URL.
+* Go to "Setup webhook in your GitHub organization" section to setup the GitHub webhook that calls branch-protector URL.
+
 * Please check the docs in `tests/how-to-test.md` file for information in regards testing.
 
-## Setup webhook in your GitHub organization
-
-* Create a webhook in your GitHub organization, you will need an admin or owner permissions (use your organization to complete the url) https://github.com/organizations/<ORGANIZATION>/settings/hooks .
-* Click radio button `Let me select individual events.` and select **ONLY** `Repositories` check box.
-* **IMPORTANT:** Select Content type `application/json`
-* Select `Active` check box and push `Add Webhook`
 
 
 ### Dockerize branch-protector
